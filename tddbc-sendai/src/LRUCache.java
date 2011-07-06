@@ -4,19 +4,24 @@ import java.util.List;
 import java.util.Map;
 
 public class LRUCache {
+
+	private static final int DEFAULT_CACHE_SIZE = 2;
+
 	private int cacheSize;
+
 	private Map<String, String> map = new HashMap<String, String>();
+
 	private List<String> keyList = new ArrayList<String>();
 
-	public LRUCache(int cachesize) {
-		if (cachesize <= 0) {
+	public LRUCache(int cacheSize) {
+		if (cacheSize <= 0) {
 			throw new IllegalArgumentException();
 		}
-		this.cacheSize = cachesize;
+		this.cacheSize = cacheSize;
 	}
 
 	public LRUCache() {
-		this.cacheSize = 2;
+		this(DEFAULT_CACHE_SIZE);
 	}
 
 	public String get(String key) {
@@ -25,37 +30,14 @@ public class LRUCache {
 			return null;
 		}
 
-		boolean containsKey = false;
-		if (keyList.contains(key)) {
-			keyList.remove(key);
-			containsKey = true;
-		}
-		if (map.containsKey(key)) {
-			keyList.add(key);
-		}
+		storeKey(key);
 
-		if (containsKey) {
-			return map.get(key);
-		} else {
-			return null;
-		}
+		return map.get(key);
 	}
 
 	public void put(String key, String value) {
+		storeKey(key);
 
-		if (keyList.size() < this.cacheSize) {
-			if (keyList.contains(key)) {
-				keyList.remove(key);
-			}
-			keyList.add(key);
-		} else {
-			if (keyList.contains(key)) {
-				keyList.remove(key);
-			} else {
-				keyList.remove(0);
-			}
-			keyList.add(key);
-		}
 		map.put(key, value);
 	}
 
@@ -68,7 +50,17 @@ public class LRUCache {
 	}
 
 	public List<String> getKeyList() {
-		return keyList;
+		return new ArrayList<String>(keyList);
 	}
 
+	private void storeKey(String key) {
+		// キーリストに入っていたらいったん追い出して末尾に追加する
+		keyList.remove(key);
+		keyList.add(key);
+
+		// キャッシュ容量を超えたら先頭から取り除く
+		if (keyList.size() > this.cacheSize) {
+			keyList.remove(0);
+		}
+	}
 }

@@ -285,4 +285,19 @@ public class LRUCacheTest {
 			assertThat(lru.getKeyList(), is(Arrays.asList("b", "c")));
 		}
 	}
+
+	public static class 観測用に取り出したキーリストに変更を加えた場合 {
+		private LRUCache lru;
+
+		@Before
+		public void 前準備() {
+			lru = new LRUCache();
+			lru.getKeyList().add("a");
+		}
+
+		@Test
+		public void 本体のキーリストには影響しない() {
+			assertThat(lru.getKeyList(), is(Collections.<String> emptyList()));
+		}
+	}
 }
