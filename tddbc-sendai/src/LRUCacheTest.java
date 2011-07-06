@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -281,7 +280,6 @@ public class LRUCacheTest {
 			lru.get("a");
 		}
 
-		@Ignore
 		@Test
 		public void キャッシュアウトしたキーに対するgetはキーリストに影響を与えない() {
 			assertThat(lru.getKeyList(), is(Arrays.asList("b", "c")));
